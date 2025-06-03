@@ -192,8 +192,8 @@ showNutritionalInfo(food: FoodItem): void {
   }
 
   this.dialog.open(NutritionalInfoDialogComponent, {
-    maxWidth: '95vw',  // Máximo de largura relativo à viewport
-  maxHeight: '98vh', 
+    maxWidth: '75vw',  // Máximo de largura relativo à viewport
+  maxHeight: '75vh', 
     data: {
       foodName: food.nome,
       nutritionalData: parsedData

@@ -1,0 +1,26 @@
+<h2 class="dialog-title">{{ data.foodName }}</h2>
+
+<div class="table-responsive">
+  <table class="nutrition-table">
+    <thead>
+      <tr>
+        <th>Componente</th>
+        <th>Unidade</th>
+        <th *ngFor="let col of processedColumns">{{ col.label }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data.nutritionalData">
+        <td data-label="Componente">{{ item.componente }}</td>
+        <td data-label="Unidade">{{ item.unidade }}</td>
+        <td *ngFor="let col of processedColumns" [attr.data-label]="col.label">
+          {{ item[col.key] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="dialog-actions">
+  <button class="close-btn" (click)="onClose()">Fechar</button>
+</div>

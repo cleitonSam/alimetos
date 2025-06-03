@@ -1,0 +1,362 @@
+// food-grid.component.scss
+.container {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Estilo do Filtro Lateral */
+.sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
+  padding: 25px;
+  color: white;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    
+    &::before {
+      content: '🍏';
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    button {
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: transparent;
+        transition: all 0.3s;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        
+        &::before {
+          background: #f1c40f;
+        }
+      }
+
+      &.active {
+        background: rgba(52, 152, 219, 0.2);
+        color: white;
+        font-weight: 500;
+        
+        &::before {
+          background: #3498db;
+        }
+      }
+
+      /* Ícones para cada categoria */
+      &[class*="fruta"]::after {
+        content: '🍓';
+        margin-left: 10px;
+      }
+      &[class*="vegetal"]::after {
+        content: '🥦';
+        margin-left: 10px;
+      }
+      /* Adicione outros ícones conforme necessário */
+    }
+  }
+}
+
+/* Estilo do Conteúdo com Cards em Coluna */
+.content {
+  flex: 1;
+  padding: 25px;
+  display: flex;
+  flex-direction: column; /* Altera para coluna */
+  gap: 20px;
+}
+
+.food-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Ocupa toda a largura disponível */
+  max-width: 100%; /* Remove a limitação de largura máxima */
+  border-left: 4px solid;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    
+    &::after {
+      transform: translateX(0);
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  h3 {
+    color: #2c3e50;
+    margin: 0 0 12px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.4;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+  }
+
+  .food-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 15px;
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      
+      &:first-child {
+        color: #7f8c8d;
+        font-weight: 500;
+      }
+
+      &:last-child {
+        color: white;
+        background: #3498db;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  /* Cores por grupo alimentar */
+  &[data-grupo*="fruta"] {
+    border-left-color: #e74c3c;
+    
+    .food-details p:first-child {
+      color: #e74c3c;
+    }
+  }
+  
+  &[data-grupo*="vegetal"], &[data-grupo*="legume"] {
+    border-left-color: #2ecc71;
+    
+    .food-details p:first-child {
+      color: #2ecc71;
+    }
+  }
+  
+  &[data-grupo*="cereal"], &[data-grupo*="grão"] {
+    border-left-color: #f39c12;
+    
+    .food-details p:first-child {
+      color: #f39c12;
+    }
+  }
+  
+  &[data-grupo*="proteína"] {
+    border-left-color: #3498db;
+    
+    .food-details p:first-child {
+      color: #3498db;
+    }
+  }
+  
+  &[data-grupo*="laticínio"] {
+    border-left-color: #9b59b6;
+    
+    .food-details p:first-child {
+      color: #9b59b6;
+    }
+  }
+}
+
+/* Estilos responsivos */
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 20px;
+    
+    .filter-group {
+      flex-direction: row;
+      flex-wrap: wrap;
+      
+      button {
+        flex: 1 0 auto;
+        max-width: 200px;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar .filter-group button {
+    max-width: 100%;
+  }
+}
+
+/* Estilos da Paginação */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+  padding: 20px 0;
+  width: 100%;
+
+  button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+
+    &:hover:not([disabled]) {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    &[disabled] {
+      background: #bdc3c7;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  .page-number {
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    background: #ecf0f1;
+    color: #2c3e50;
+
+    &:hover:not(.active) {
+      background: #d5dbdb;
+    }
+
+    &.active {
+      background: #3498db;
+      color: white;
+      font-weight: bold;
+    }
+  }
+}
+
+/* Ajustes responsivos para paginação */
+@media (max-width: 576px) {
+  .pagination {
+    flex-wrap: wrap;
+    gap: 4px;
+
+    button, .page-number {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+/* Adicione isso no arquivo SCSS, dentro do .sidebar */
+.search-box {
+  position: relative;
+  margin-bottom: 20px;
+
+  input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* Adicione estilos responsivos */
+@media (max-width: 992px) {
+  .search-box {
+    margin-bottom: 15px;
+    
+    input {
+      padding: 10px 15px 10px 35px;
+    }
+  }
+}

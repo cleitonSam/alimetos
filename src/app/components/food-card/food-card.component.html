@@ -29,7 +29,8 @@
   <main class="content">
     <div *ngFor="let food of paginatedItems" class="food-card" 
          [attr.data-grupo]="food.grupo ? food.grupo.toLowerCase() : 'outros'"
-         [class.inactive]="food.status === 'inativo'">
+         [class.inactive]="food.status === 'inativo'"
+         (click)="showNutritionalInfo(food)">
       <div class="food-header">
         <h3>{{ food.nome }}</h3>
         <div class="status-badge" [class.active]="food.status === 'ativo'">

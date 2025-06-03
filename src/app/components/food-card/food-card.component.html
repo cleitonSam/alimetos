@@ -29,11 +29,19 @@
   <main class="content">
     <div *ngFor="let food of paginatedItems" class="food-card" 
          [attr.data-grupo]="food.grupo ? food.grupo.toLowerCase() : 'outros'"
-          (click)="showNutritionalInfo(food)">
-      <h3>{{ food.nome }}</h3>
+         [class.inactive]="food.status === 'inativo'">
+      <div class="food-header">
+        <h3>{{ food.nome }}</h3>
+        <div class="status-badge" [class.active]="food.status === 'ativo'">
+          {{ food.status === 'ativo' ? 'Ativo' : 'Inativo' }}
+        </div>
+      </div>
       <div class="food-details">
         <p>{{ food.grupo || 'Grupo não especificado' }}</p>
         <p>Código: {{ food.codigo || 'N/A' }}</p>
+        <button class="status-toggle" (click)="toggleFoodStatus(food); $event.stopPropagation()">
+          {{ food.status === 'ativo' ? 'Desativar' : 'Ativar' }}
+        </button>
       </div>
     </div>
 

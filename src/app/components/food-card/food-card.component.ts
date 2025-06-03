@@ -14,13 +14,12 @@ import { MatDialog } from '@angular/material/dialog';
   imports: [NgFor, CommonModule, FormsModule]
 })
 export class FoodCardComponent implements OnInit {
-  foodItems: FoodItem[] = [];
+ foodItems: FoodItem[] = [];
   filteredItems: FoodItem[] = [];
   paginatedItems: FoodItem[] = [];
   uniqueGroups: string[] = [];
   selectedGroup: string = '';
-   searchTerm: string = '';
-  
+  searchTerm: string = '';
   
   // Variáveis de paginação
   currentPage: number = 1;
@@ -29,20 +28,55 @@ export class FoodCardComponent implements OnInit {
 
   constructor(private foodService: FoodService, private dialog: MatDialog) {}
 
-  ngOnInit(): void {
-    this.foodService.getFoodItems().subscribe({
-      next: (items) => {
-        this.foodItems = items;
-        this.filteredItems = [...items];
-        this.extractUniqueGroups();
-        this.updatePagination();
-      },
-      error: (err) => {
-        console.error('Erro ao carregar alimentos:', err);
-      }
-    });
+ ngOnInit(): void {
+    this.loadFoodItems();
   }
 
+ loadFoodItems(): void {
+  this.foodService.getFoodItems().subscribe({
+    next: (items) => {
+      this.foodItems = items;
+      this.filteredItems = [...items];
+      this.extractUniqueGroups();
+      this.updatePagination();
+    },
+    error: (err) => {
+      console.error('Erro ao carregar alimentos:', err);
+    }
+  });
+}
+
+ toggleFoodStatus(food: FoodItem): void {
+  const originalStatus = food.status;
+  const newStatus = food.status === 'ativo' ? 'inativo' : 'ativo';
+  
+  // Atualização otimista da UI
+  food.status = newStatus;
+  
+  this.foodService.updateFoodStatus(food.id, newStatus).subscribe({
+    next: (updatedFood) => {
+      // Atualiza os arrays com os dados confirmados do servidor
+      const updateItemInArray = (array: FoodItem[]) => {
+        const index = array.findIndex(item => item.id === food.id);
+        if (index !== -1) {
+          array[index] = { ...array[index], status: updatedFood.status };
+        }
+      };
+      
+      updateItemInArray(this.foodItems);
+      updateItemInArray(this.filteredItems);
+      updateItemInArray(this.paginatedItems);
+    },
+    error: (err) => {
+      console.error('Erro ao atualizar status:', err);
+      // Reverte a mudança em caso de erro
+      food.status = originalStatus;
+      
+      // Força a atualização da UI
+      this.updatePagination();
+    }
+  });
+}
   extractUniqueGroups(): void {
     const groups = new Set(this.foodItems.map(item => item.grupo));
     this.uniqueGroups = Array.from(groups).sort();

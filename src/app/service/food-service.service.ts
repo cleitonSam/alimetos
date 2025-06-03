@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { FoodItem } from '../components/food-item.model';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +13,19 @@ export class FoodService {
 
   getFoodItems(): Observable<FoodItem[]> {
     return this.http.get<{ alimentos: FoodItem[] }>(this.apiUrl).pipe(
-      map(response => response.alimentos)
+      map(response => response.alimentos.map(item => ({
+        ...item,
+        status: item.status || 'ativo' // Garante um valor padrão se status for undefined
+      })))
+    );
+  }
+
+  updateFoodStatus(id: string, status: 'ativo' | 'inativo'): Observable<FoodItem> {
+    const updateUrl = `${this.apiUrl}/${id}`;
+    return this.http.put<{ alimento: FoodItem }>(updateUrl, {
+      alimento: { status }
+    }).pipe(
+      map(response => response.alimento)
     );
   }
 }
